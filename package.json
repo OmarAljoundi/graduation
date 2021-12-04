@@ -1,0 +1,45 @@
+{
+  "name": "graduation-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "set ENV=dev && npx tsc && node dist/server.js",
+    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
+    "tsc": "tsc",
+    "test": "npx tsc && db-migrate --env test up && jasmine-ts && db-migrate --env test reset"
+  },
+  "author": "Omar Aljoundi",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
+    "@types/express": "^4.17.13",
+    "@types/pg": "^7.14.11",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cloudinary": "^1.27.1",
+    "cors": "^2.8.5",
+    "db-migrate": "^1.0.0-beta.16",
+    "db-migrate-pg": "^1.2.2",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.5.1",
+    "twilio": "^3.71.2",
+    "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12",
+    "@types/jasmine": "^3.10.1",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/supertest": "^2.0.11",
+    "jasmine": "^3.10.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "jasmine-ts": "^0.4.0",
+    "prettier": "2.4.1",
+    "supertest": "^6.1.6",
+    "ts-node": "^10.4.0",
+    "tsc-watch": "^4.5.0"
+  }
+}
