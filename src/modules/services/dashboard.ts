@@ -35,6 +35,22 @@ class Dashboard {
             throw new Error(`Couldnt check user existence:${err}`)
         }
     }
+    async isRangerExist(nationality_id:string):Promise<boolean>{
+        try{
+            const conn = await client.connect()
+            const sql = "SELECT * from rangers where nationality_id=$1"
+            const result = await conn.query(sql,[nationality_id])
+            if(result.rowCount > 0){
+                return true
+            }
+            else{
+                return false
+            }
+        }
+        catch(err){
+            throw new Error(`Couldnt check user existence:${err}`)
+        }
+    }
     async getUserInfoFromService(sid:string):Promise<user>{
         try{
             console.log(sid)

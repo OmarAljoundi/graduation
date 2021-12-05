@@ -14,7 +14,6 @@ export type user = {
     password_digest:string,
     phone_number:string,
     nationality_id:string,
-    user_type?:string
 }
 
 class User {
@@ -34,9 +33,9 @@ class User {
         const { SALT_ROUNDS,BCRYPT_PASSWORD } = process.env
         try{
         const conn = await client.connect()
-        const sql = "INSERT INTO users(name,b_date,email,gender,password_digest,phone_number,nationality_id,user_type) Values($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *"
+        const sql = "INSERT INTO users(name,b_date,email,gender,password_digest,phone_number,nationality_id) Values($1,$2,$3,$4,$5,$6,$7) RETURNING *"
         const password_digest = bcrypt.hashSync(u.password_digest + BCRYPT_PASSWORD!,parseInt(SALT_ROUNDS!))
-        const result = await conn.query(sql,[u.name,u.b_date,u.email,u.gender,password_digest,u.phone_number,u.nationality_id,u.user_type])
+        const result = await conn.query(sql,[u.name,u.b_date,u.email,u.gender,password_digest,u.phone_number,u.nationality_id])
         conn.release()
         return result.rows[0]
     

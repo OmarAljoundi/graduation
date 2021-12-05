@@ -39,18 +39,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var user_1 = __importDefault(require("../modules/user"));
+var ranger_1 = __importDefault(require("../modules/ranger"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var twilio_1 = __importDefault(require("twilio"));
 var dashboard_1 = require("./services/dashboard");
-var _a = process.env, token = _a.token, sid = _a.sid, service_id = _a.service_id;
-var clientServer = (0, twilio_1.default)(sid, token);
-var userObject = new user_1.default();
+var rangerObject = new ranger_1.default();
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var result;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, userObject.index()];
+            case 0: return [4 /*yield*/, rangerObject.index()];
             case 1:
                 result = _a.sent();
                 return [2 /*return*/, res.status(200).json(result)];
@@ -65,77 +62,50 @@ var register = function (_req, res) { return __awaiter(void 0, void 0, void 0, f
                 body = _req.body;
                 userInfo = {
                     name: body.name,
-                    b_date: body.b_date,
-                    email: body.email,
-                    gender: body.gender,
                     password_digest: body.password,
                     phone_number: body.phone_number,
                     nationality_id: body.nationality_id
                 };
-                return [4 /*yield*/, userObject.register(userInfo)];
+                return [4 /*yield*/, rangerObject.register(userInfo)];
             case 1:
                 result = _a.sent();
                 if (result) {
-                    clientServer.verify.services(service_id).verifications
-                        .create({ to: "+962".concat(userInfo.phone_number), channel: 'sms' });
-                    return [2 /*return*/, res.setHeader('phoneNumber', userInfo.phone_number).setHeader('user_id', result === null || result === void 0 ? void 0 : result.id).json("Please Vertifiy Your Phone Number")];
-                }
-                return [2 /*return*/];
-        }
-    });
-}); };
-var verificationsCode = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var phoneNumber, code, user_id, result;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                phoneNumber = _req.body.phone_number;
-                code = _req.body.code;
-                user_id = _req.body.user_id;
-                return [4 /*yield*/, userObject.vertifiyPhoneNumber(phoneNumber, code, user_id)];
-            case 1:
-                result = _a.sent();
-                if (result) {
-                    return [2 /*return*/, res.json("Vertifed")];
-                }
-                else {
-                    return [2 /*return*/, res.json("Not Vertified")];
+                    return [2 /*return*/, res.json("Ranger ".concat(result.name, " has been registerd!"))];
                 }
                 return [2 /*return*/];
         }
     });
 }); };
 var auth = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var phoneNumber, password, result, token_1;
+    var nationality_id, password, result, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                phoneNumber = _req.body.phone_number;
+                nationality_id = _req.body.nationality_id;
                 password = _req.body.password;
-                return [4 /*yield*/, userObject.authenticate(phoneNumber, password)];
+                return [4 /*yield*/, rangerObject.authenticate(nationality_id, password)];
             case 1:
                 result = _a.sent();
                 if (result) {
-                    token_1 = jsonwebtoken_1.default.sign({ user: result }, String(process.env.TOKEN_SECRET));
-                    res.setHeader("authorization", token_1);
+                    token = jsonwebtoken_1.default.sign({ user: result }, String(process.env.TOKEN_SECRET));
+                    res.setHeader("authorization", token);
                     res.setHeader("Access-Control-Expose-Headers", "*");
                     res.setHeader("Access-Control-Expose-Headers", "authorization");
-                    return [2 /*return*/, res.json({
+                    return [2 /*return*/, res.status(200).json({
                             info: result,
                             message: "Login Successfully"
                         })];
                 }
                 else {
-                    return [2 /*return*/, res.json("couldnt Log in!")];
+                    return [2 /*return*/, res.status(204).json("couldnt Log in!")];
                 }
                 return [2 /*return*/];
         }
     });
 }); };
-var user_routes = function (app) {
-    app.get('/users', index);
-    app.post('/register', dashboard_1.isUserExist, register);
-    app.post('/users/auth', dashboard_1.isUserVaild, auth);
-    app.put('/register', verificationsCode);
+var ranger_routes = function (app) {
+    app.get('/rangers', index);
+    app.post('/rangers/register', dashboard_1.isRangerExist, register);
+    app.post('/rangers/auth', auth);
 };
-exports.default = user_routes;
+exports.default = ranger_routes;

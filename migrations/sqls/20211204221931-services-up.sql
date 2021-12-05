@@ -11,6 +11,8 @@ CREATE TABLE services (
     status varchar DEFAULT 'pending',
     create_at TIMESTAMPTZ DEFAULT Now(),
     service_type Varchar REFERENCES service_types(type),
-    user_id bigint REFERENCES users(id) ON DELETE CASCADE
+    user_id bigint REFERENCES users(id) ON DELETE CASCADE,
+    closedBy_id bigint REFERENCES rangers(id) ON DELETE CASCADE
 );
+
 

@@ -139,6 +139,6 @@ var complaint_routes = function (app) {
     app.post('/complaints', dashboard_2.verifyAuthToken, create);
     app.get('/complaints', dashboard_2.verifyAuthToken, index);
     app.get('/complaints/:id', dashboard_2.verifyAuthToken, getComplaintById);
-    app.put('/complaints/:id', [dashboard_2.verifyAuthToken, dashboard_2.isRanger], completed);
+    app.put('/complaints/:id', dashboard_2.verifyAuthToken, completed);
 };
 exports.default = complaint_routes;

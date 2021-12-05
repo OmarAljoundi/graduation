@@ -1,7 +1,7 @@
 import express,{ Request,Response } from "express";
 import Complaint,{ complaint } from "../modules/complaint"
 import Dashboard from "../modules/services/dashboard";
-import { isRanger, verifyAuthToken } from './services/dashboard';
+import { verifyAuthToken } from './services/dashboard';
 import sgMail from "@sendgrid/mail"
 
 const { mail_api } = process.env
@@ -66,7 +66,7 @@ const complaint_routes = (app:express.Application)=>{
     app.post('/complaints',verifyAuthToken,create)
     app.get('/complaints',verifyAuthToken,index)
     app.get('/complaints/:id',verifyAuthToken,getComplaintById)
-    app.put('/complaints/:id',[verifyAuthToken,isRanger],completed)
+    app.put('/complaints/:id',verifyAuthToken,completed)
 }
 
 

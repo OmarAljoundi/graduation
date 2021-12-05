@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isRanger = exports.isUserVaild = exports.isUserExist = exports.verifyAuthToken = exports.authedUser = void 0;
+exports.isUserVaild = exports.isRangerExist = exports.isUserExist = exports.verifyAuthToken = exports.authedUser = void 0;
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var dashboard_1 = __importDefault(require("../../modules/services/dashboard"));
 var dashboardObject = new dashboard_1.default();
@@ -83,6 +83,26 @@ var isUserExist = function (_req, res, next) { return __awaiter(void 0, void 0, 
     });
 }); };
 exports.isUserExist = isUserExist;
+var isRangerExist = function (_req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var nationality_id, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                nationality_id = _req.body.nationality_id;
+                return [4 /*yield*/, dashboardObject.isRangerExist(nationality_id)];
+            case 1:
+                result = _a.sent();
+                if (result) {
+                    return [2 /*return*/, res.json({ status: 403, message: "An account with the same nationality id is registered" })];
+                }
+                else {
+                    next();
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.isRangerExist = isRangerExist;
 var isUserVaild = function (_req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var phone_number, result, vertifiy;
     return __generator(this, function (_a) {
@@ -109,18 +129,14 @@ var isUserVaild = function (_req, res, next) { return __awaiter(void 0, void 0, 
     });
 }); };
 exports.isUserVaild = isUserVaild;
-var isRanger = function (_req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        if (exports.authedUser.user_type === "ranger") {
-            next();
-        }
-        else {
-            return [2 /*return*/, res.json({
-                    status: 404,
-                    message: "Unauthorized!"
-                })];
-        }
-        return [2 /*return*/];
-    });
-}); };
-exports.isRanger = isRanger;
+// export const isRanger = async (_req:Request,res:Response,next:()=>void)=>{
+//     if(authedUser.user_type === "ranger"){
+//       next()
+//     } 
+//     else{
+//       return res.json({
+//         status:404,
+//         message:"Unauthorized!"
+//       })
+//     }
+// }

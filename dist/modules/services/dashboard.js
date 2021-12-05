@@ -101,9 +101,38 @@ var Dashboard = /** @class */ (function () {
             });
         });
     };
+    Dashboard.prototype.isRangerExist = function (nationality_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = "SELECT * from rangers where nationality_id=$1";
+                        return [4 /*yield*/, conn.query(sql, [nationality_id])];
+                    case 2:
+                        result = _a.sent();
+                        if (result.rowCount > 0) {
+                            return [2 /*return*/, true];
+                        }
+                        else {
+                            return [2 /*return*/, false];
+                        }
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_3 = _a.sent();
+                        throw new Error("Couldnt check user existence:".concat(err_3));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     Dashboard.prototype.getUserInfoFromService = function (sid) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, serviceObj, sql2, userInfo, err_3;
+            var conn, sql, serviceObj, sql2, userInfo, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -122,8 +151,8 @@ var Dashboard = /** @class */ (function () {
                         userInfo = _a.sent();
                         return [2 /*return*/, userInfo.rows[0]];
                     case 4:
-                        err_3 = _a.sent();
-                        throw new Error("Couldnt get user:".concat(err_3));
+                        err_4 = _a.sent();
+                        throw new Error("Couldnt get user:".concat(err_4));
                     case 5: return [2 /*return*/];
                 }
             });
@@ -131,7 +160,7 @@ var Dashboard = /** @class */ (function () {
     };
     Dashboard.prototype.getUserInfoFromComplaint = function (sid) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, serviceObj, sql2, userInfo, err_4;
+            var conn, sql, serviceObj, sql2, userInfo, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -150,8 +179,8 @@ var Dashboard = /** @class */ (function () {
                         userInfo = _a.sent();
                         return [2 /*return*/, userInfo.rows[0]];
                     case 4:
-                        err_4 = _a.sent();
-                        throw new Error("Couldnt get user:".concat(err_4));
+                        err_5 = _a.sent();
+                        throw new Error("Couldnt get user:".concat(err_5));
                     case 5: return [2 /*return*/];
                 }
             });

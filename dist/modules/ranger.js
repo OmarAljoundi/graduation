@@ -41,13 +41,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = __importDefault(require("../database"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
-var twilio_1 = __importDefault(require("twilio"));
-var _a = process.env, token = _a.token, sid = _a.sid, service_id = _a.service_id;
-var clientServer = (0, twilio_1.default)(sid, token);
-var User = /** @class */ (function () {
-    function User() {
+var Ranger = /** @class */ (function () {
+    function Ranger() {
     }
-    User.prototype.index = function () {
+    Ranger.prototype.index = function () {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, err_1;
             return __generator(this, function (_a) {
@@ -57,7 +54,7 @@ var User = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "SELECT * from users";
+                        sql = "SELECT * from rangers";
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         result = _a.sent();
@@ -65,13 +62,13 @@ var User = /** @class */ (function () {
                         return [2 /*return*/, result.rows];
                     case 3:
                         err_1 = _a.sent();
-                        throw new Error("Users Couldnt be retrieved, ".concat(err_1));
+                        throw new Error("Rangers Couldnt be retrieved, ".concat(err_1));
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    User.prototype.register = function (u) {
+    Ranger.prototype.register = function (u) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, SALT_ROUNDS, BCRYPT_PASSWORD, conn, sql, password_digest, result, err_2;
             return __generator(this, function (_b) {
@@ -84,22 +81,22 @@ var User = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 2:
                         conn = _b.sent();
-                        sql = "INSERT INTO users(name,b_date,email,gender,password_digest,phone_number,nationality_id) Values($1,$2,$3,$4,$5,$6,$7) RETURNING *";
+                        sql = "INSERT INTO rangers(name,password_digest,phone_number,nationality_id) Values($1,$2,$3,$4) RETURNING *";
                         password_digest = bcrypt_1.default.hashSync(u.password_digest + BCRYPT_PASSWORD, parseInt(SALT_ROUNDS));
-                        return [4 /*yield*/, conn.query(sql, [u.name, u.b_date, u.email, u.gender, password_digest, u.phone_number, u.nationality_id])];
+                        return [4 /*yield*/, conn.query(sql, [u.name, password_digest, u.phone_number, u.nationality_id])];
                     case 3:
                         result = _b.sent();
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 4:
                         err_2 = _b.sent();
-                        throw new Error("Users Couldnt be registerd, ".concat(err_2));
+                        throw new Error("Ranger Couldnt be registerd, ".concat(err_2));
                     case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    User.prototype.authenticate = function (phoneNumber, password) {
+    Ranger.prototype.authenticate = function (nationality_id, password) {
         return __awaiter(this, void 0, void 0, function () {
             var BCRYPT_PASSWORD, conn, sql, userInfo, err_3;
             return __generator(this, function (_a) {
@@ -112,8 +109,8 @@ var User = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 2:
                         conn = _a.sent();
-                        sql = "SELECT * from users where phone_number=$1";
-                        return [4 /*yield*/, conn.query(sql, [phoneNumber])];
+                        sql = "SELECT * from rangers where nationality_id=$1";
+                        return [4 /*yield*/, conn.query(sql, [nationality_id])];
                     case 3:
                         userInfo = _a.sent();
                         conn.release();
@@ -131,63 +128,12 @@ var User = /** @class */ (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         err_3 = _a.sent();
-                        throw new Error("Users Couldnt be registerd, ".concat(err_3));
+                        throw new Error("Ranger Couldnt be registerd, ".concat(err_3));
                     case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    User.prototype.vertifiyPhoneNumber = function (phone_number, code, user_id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var vertify_1, status_1, conn_1, sql_1, err_4;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        vertify_1 = false;
-                        status_1 = "vertify";
-                        return [4 /*yield*/, database_1.default.connect()];
-                    case 1:
-                        conn_1 = _a.sent();
-                        sql_1 = 'UPDATE users set status=$1 where id=$2';
-                        return [4 /*yield*/, clientServer.verify.services(service_id)
-                                .verificationChecks
-                                .create({ to: "+962".concat(phone_number), code: code })
-                                .then(function (verification_check) { return __awaiter(_this, void 0, void 0, function () {
-                                var result;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            if (!(verification_check.status === "approved")) return [3 /*break*/, 2];
-                                            return [4 /*yield*/, conn_1.query(sql_1, [status_1, user_id])];
-                                        case 1:
-                                            result = _a.sent();
-                                            conn_1.release();
-                                            vertify_1 = true;
-                                            _a.label = 2;
-                                        case 2: return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
-                    case 2:
-                        _a.sent();
-                        console.log(vertify_1);
-                        if (vertify_1) {
-                            return [2 /*return*/, true];
-                        }
-                        else {
-                            return [2 /*return*/, false];
-                        }
-                        return [3 /*break*/, 4];
-                    case 3:
-                        err_4 = _a.sent();
-                        throw new Error("Couldnt Vertified ".concat(err_4));
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return User;
+    return Ranger;
 }());
-exports.default = User;
+exports.default = Ranger;

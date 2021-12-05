@@ -21,8 +21,7 @@ const register = async (_req:Request,res:Response)=>{
         gender:body.gender,
         password_digest:body.password,
         phone_number:body.phone_number,
-        nationality_id:body.nationality_id,
-        user_type:body.user_type
+        nationality_id:body.nationality_id
     }
     const result = await userObject.register(userInfo)
     if(result){

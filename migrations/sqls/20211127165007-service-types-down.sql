@@ -1,1 +1,1 @@
--- DROP TABLE service_types;
+DROP TABLE service_types;

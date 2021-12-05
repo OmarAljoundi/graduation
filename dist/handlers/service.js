@@ -213,7 +213,7 @@ var updateStatus = function (_req, res) { return __awaiter(void 0, void 0, void 
 var service_routes = function (app) {
     app.get('/services', dashboard_1.verifyAuthToken, index);
     app.get('/services/:id', dashboard_1.verifyAuthToken, getServiceById);
-    app.put('/services/:id', [dashboard_1.verifyAuthToken, dashboard_1.isRanger], updateStatus);
+    app.put('/services/:id', dashboard_1.verifyAuthToken, updateStatus);
     app.post('/services/proposal', dashboard_1.verifyAuthToken, proposalRequest);
     app.post('/services/cars_check', dashboard_1.verifyAuthToken, carsCheckRequest);
     app.post('/services/nosie_measurement', dashboard_1.verifyAuthToken, nosieMeasurementRequest);

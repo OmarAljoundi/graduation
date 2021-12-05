@@ -41,6 +41,16 @@ export const isUserExist = async (_req:Request,res:Response,next:()=>void)=>{
     next()
   }
 }
+export const isRangerExist = async (_req:Request,res:Response,next:()=>void)=>{
+  const nationality_id = _req.body.nationality_id
+  const result = await dashboardObject.isRangerExist(nationality_id)
+  if(result){
+    return res.json({status:403,message:"An account with the same nationality id is registered"})
+  }
+  else{
+    next()
+  }
+}
 
 export const isUserVaild = async (_req:Request,res:Response,next:()=>void)=>{
   const phone_number = _req.body.phone_number
@@ -59,17 +69,17 @@ export const isUserVaild = async (_req:Request,res:Response,next:()=>void)=>{
   }
 }
 
-export const isRanger = async (_req:Request,res:Response,next:()=>void)=>{
-    if(authedUser.user_type === "ranger"){
-      next()
-    } 
-    else{
-      return res.json({
-        status:404,
-        message:"Unauthorized!"
-      })
-    }
-}
+// export const isRanger = async (_req:Request,res:Response,next:()=>void)=>{
+//     if(authedUser.user_type === "ranger"){
+//       next()
+//     } 
+//     else{
+//       return res.json({
+//         status:404,
+//         message:"Unauthorized!"
+//       })
+//     }
+// }
 
 
 

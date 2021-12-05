@@ -1,6 +1,6 @@
 import Service,{service} from '../modules/service';
 import express,{Request,Response} from 'express'
-import { verifyAuthToken,isRanger } from './services/dashboard';
+import { verifyAuthToken } from './services/dashboard';
 import Dashboard from '../modules/services/dashboard';
 import sgMail from "@sendgrid/mail"
 
@@ -119,7 +119,7 @@ const updateStatus = async (_req:Request,res:Response)=>{
 const service_routes = (app:express.Application) =>{
     app.get('/services',verifyAuthToken,index)
     app.get('/services/:id',verifyAuthToken,getServiceById)
-    app.put('/services/:id',[verifyAuthToken,isRanger],updateStatus)
+    app.put('/services/:id',verifyAuthToken,updateStatus)
     app.post('/services/proposal',verifyAuthToken,proposalRequest)
     app.post('/services/cars_check',verifyAuthToken,carsCheckRequest)
     app.post('/services/nosie_measurement',verifyAuthToken,nosieMeasurementRequest)

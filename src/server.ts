@@ -4,6 +4,7 @@ import cors from 'cors'
 import user_routes from "./handlers/user";
 import service_routes from "./handlers/service";
 import complaint_routes from "./handlers/complaint";
+import ranger_routes from "./handlers/ranger"
 export const app: express.Application = express();
 const address: string = "0.0.0.0:5000";
 
@@ -14,6 +15,8 @@ app.get("/", function (req: Request, res: Response) {
 service_routes(app)
 user_routes(app)
 complaint_routes(app)
+ranger_routes(app)
+
 app.listen(5000, function () {
   console.log(`starting app on: ${address}`);
 });
