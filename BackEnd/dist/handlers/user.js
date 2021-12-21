@@ -75,12 +75,23 @@ var register = function (_req, res) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, userObject.register(userInfo)];
             case 1:
                 result = _a.sent();
-                if (result) {
-                    clientServer.verify.services(service_id).verifications
-                        .create({ to: "+962".concat(userInfo.phone_number), channel: 'sms' });
-                    return [2 /*return*/, res.setHeader('phoneNumber', userInfo.phone_number).setHeader('user_id', result === null || result === void 0 ? void 0 : result.id).json("Please Vertifiy Your Phone Number")];
-                }
-                return [2 /*return*/];
+                if (!result) return [3 /*break*/, 3];
+                return [4 /*yield*/, clientServer.verify.services(service_id).verifications
+                        .create({ to: "+962".concat(userInfo.phone_number), channel: 'sms' }).then(function (response) {
+                        console.log(response);
+                        return res.status(200).json({
+                            message: "Please Vertifiy Your Phone Number",
+                            user_id: result.id,
+                            phone_number: userInfo.phone_number,
+                            userInfo: result
+                        });
+                    }).catch(function () {
+                        return res.sendStatus(404);
+                    })];
+            case 2:
+                _a.sent();
+                _a.label = 3;
+            case 3: return [2 /*return*/];
         }
     });
 }); };
