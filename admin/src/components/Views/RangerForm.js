@@ -98,6 +98,7 @@ const RangerForm = () => {
               <FaUserCircle className="icon" fill="black" size={36} />
             </div>
             <input
+            disabled="true"
               type={'text'}
               placeholder="First Name"
               id="first"

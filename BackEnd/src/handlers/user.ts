@@ -2,7 +2,7 @@ import User,{user} from '../modules/user';
 import express,{Request,Response} from 'express'
 import jwt from "jsonwebtoken";
 import Client from "twilio";
-import { isRangerAccount, isUserExist,isUserVaild, verifyAuthToken } from './services/dashboard';
+import { isRangerAccount, isUserAccount, isUserExist,isUserVaild, verifyAuthToken } from './services/dashboard';
 
 
 const { token,sid,service_id } = process.env
@@ -68,9 +68,22 @@ const getUserById = async(_req:Request,res:Response)=>{
     const result = await userObject.getUserById(id)
     return res.json(result)
 }
+const changePassword = async (_req:Request,res:Response)=>{
+    const phone_number = _req.body.phone_number
+    const password = _req.body.newPassword
+    const result = await userObject.changePassword(phone_number,password)
+    if(result){
+        return res.json(result)
+    }
+    else {
+        return res.sendStatus(404)
+    }
+   
+}
 
 const user_routes = (app:express.Application) =>{
     app.get('/users',index)
+    app.put('/users/changepassword',isUserAccount,changePassword)
     app.get('/users/:id',[verifyAuthToken,isRangerAccount],getUserById)
     app.post('/register',isUserExist,register)
     app.post('/users/auth',isUserVaild,auth)

@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { user } from "../../modules/user";
+import User, { user } from "../../modules/user";
 import Dashboard from "../../modules/services/dashboard";
 import Ranger from "../../modules/ranger";
 export let authedUser:any
 const dashboardObject = new Dashboard()
 const rangerObj = new Ranger()
+const userObj = new User()
 export const verifyAuthToken = (
   req: Request,
   res: Response,
@@ -69,6 +70,21 @@ export const isUserVaild = async (_req:Request,res:Response,next:()=>void)=>{
     return res.sendStatus(404)
   }
 }
+
+export const isUserAccount = async (_req:Request,res:Response,next:()=>void)=>{
+  const phone_number = _req.body.phone_number
+  const password = _req.body.oldPassword
+  const result = await userObj.authenticate(phone_number,password)
+  if(result){
+    next()
+  }
+  else{
+    return res.sendStatus(401)
+  }
+  
+}
+
+
 
 export const isRangerAccount =async (_req:Request,res:Response,next: () => void) => {
   const id = authedUser.nationality_id

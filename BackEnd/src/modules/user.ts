@@ -81,6 +81,7 @@ class User {
     }
 
     async vertifiyPhoneNumber(phone_number:string,code:string,user_id:bigint):Promise<boolean>{
+        
          try{
             let vertify :boolean = false
             const status = "vertify"
@@ -110,6 +111,24 @@ class User {
         }
    
     }
+
+
+    async changePassword(phone_number:string,password:string):Promise<user|null>{
+        const { SALT_ROUNDS,BCRYPT_PASSWORD } = process.env
+        try{
+           const conn = await client.connect()
+           const sql = 'UPDATE users set password_digest=$1 where phone_number=$2 RETURNING *'
+           const password_digest = bcrypt.hashSync(password + BCRYPT_PASSWORD!,parseInt(SALT_ROUNDS!))
+           const result = await conn.query(sql,[password_digest,phone_number])
+           return result.rows[0]
+       }
+       catch(err){
+          return null
+       }
+  
+   }
+
+
 }
 
 
