@@ -11,7 +11,7 @@ export function setAuthedUser(authedUser, token) {
 
 export function handleSetAuthedUser(authedUser, token) {
   return (dispatch) => {
-    return dispatch(setAuthedUser(authedUser, token))
+    dispatch(setAuthedUser(authedUser, token))
   }
 }
 
@@ -24,6 +24,6 @@ export function resetAuthedUser() {
 
 export function handleResetAuthedUser() {
   return (dispatch) => {
-    return dispatch(resetAuthedUser())
+    dispatch(resetAuthedUser())
   }
 }

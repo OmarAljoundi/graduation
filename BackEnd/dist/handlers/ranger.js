@@ -72,7 +72,7 @@ var register = function (_req, res) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, rangerObject.register(userInfo)];
             case 1:
                 result = _a.sent();
-                if (!result) return [3 /*break*/, 3];
+                if (!(typeof result !== 'string')) return [3 /*break*/, 3];
                 mail_1.default.setApiKey(mail_api);
                 msg = {
                     to: result.email,
@@ -95,7 +95,7 @@ var register = function (_req, res) { return __awaiter(void 0, void 0, void 0, f
             case 2:
                 _a.sent();
                 return [2 /*return*/, res.status(201).json("Account Has been Created")];
-            case 3: return [2 /*return*/];
+            case 3: return [2 /*return*/, res.sendStatus(400)];
         }
     });
 }); };
@@ -189,6 +189,46 @@ var createRangerPassword = function (_req, res) { return __awaiter(void 0, void 
         }
     });
 }); };
+var chnagePassword = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var oldPassword, newPassword, nationalityID, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                oldPassword = _req.body.oldPassword;
+                newPassword = _req.body.newPassword;
+                nationalityID = _req.body.nationality_id;
+                return [4 /*yield*/, rangerObject.changePassword(oldPassword, newPassword, nationalityID)];
+            case 1:
+                result = _a.sent();
+                if (result) {
+                    return [2 /*return*/, res.sendStatus(200)];
+                }
+                else {
+                    return [2 /*return*/, res.sendStatus(404)];
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+var deleteRanger = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                id = _req.params.id;
+                return [4 /*yield*/, rangerObject.delete(Number(id))];
+            case 1:
+                result = _a.sent();
+                if (result) {
+                    return [2 /*return*/, res.sendStatus(201)];
+                }
+                else {
+                    return [2 /*return*/, res.sendStatus(404)];
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
 var ranger_routes = function (app) {
     app.get('/rangers', index);
     app.get('/rangers/:id', [dashboard_1.verifyAuthToken, dashboard_1.isRangerAccount], getRangerById);
@@ -197,5 +237,7 @@ var ranger_routes = function (app) {
     app.post('/rangers/register', [dashboard_1.verifyAuthToken, dashboard_1.isRangerAccount], register);
     app.post('/rangers/auth', auth);
     app.put('/rangers/auth', createRangerPassword);
+    app.put('/rangers/auth/changePassword', [dashboard_1.verifyAuthToken, dashboard_1.isRangerAccount], chnagePassword);
+    app.delete('/rangers/:id', [dashboard_1.verifyAuthToken, dashboard_1.isRangerAccount], deleteRanger);
 };
 exports.default = ranger_routes;

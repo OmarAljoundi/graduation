@@ -44,7 +44,6 @@ class Users extends Component {
     }
   }
   filterUsers = () => {
-    // e.preventDefault()
     const { query, type, status, sort } = this.state
     const { users } = this.props
     let tempUsers

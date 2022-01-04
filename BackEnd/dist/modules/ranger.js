@@ -191,7 +191,7 @@ var Ranger = /** @class */ (function () {
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_6 = _a.sent();
-                        throw new Error("Ranger Couldnt be registerd, ".concat(err_6));
+                        return [2 /*return*/, String(err_6)];
                     case 4: return [2 /*return*/];
                 }
             });
@@ -264,6 +264,67 @@ var Ranger = /** @class */ (function () {
                         err_8 = _a.sent();
                         throw new Error("Ranger Couldnt be registerd, ".concat(err_8));
                     case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Ranger.prototype.changePassword = function (oldPassword, newPassword, nationality_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, SALT_ROUNDS, BCRYPT_PASSWORD, password_digest, conn, checkPassword, sql, result, err_9;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 6, , 7]);
+                        _a = process.env, SALT_ROUNDS = _a.SALT_ROUNDS, BCRYPT_PASSWORD = _a.BCRYPT_PASSWORD;
+                        password_digest = bcrypt_1.default.hashSync(newPassword + BCRYPT_PASSWORD, parseInt(SALT_ROUNDS));
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _b.sent();
+                        return [4 /*yield*/, this.authenticate(nationality_id, oldPassword)];
+                    case 2:
+                        checkPassword = _b.sent();
+                        if (!checkPassword) return [3 /*break*/, 4];
+                        sql = "UPDATE rangers set password_digest = $1 where nationality_id = $2 RETURNING *";
+                        return [4 /*yield*/, conn.query(sql, [password_digest, nationality_id])];
+                    case 3:
+                        result = _b.sent();
+                        conn.release();
+                        return [2 /*return*/, true];
+                    case 4: return [2 /*return*/, false];
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
+                        err_9 = _b.sent();
+                        return [2 /*return*/, false];
+                    case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Ranger.prototype.delete = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, err_10;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = "DELETE from rangers where id=$1";
+                        return [4 /*yield*/, conn.query(sql, [id])];
+                    case 2:
+                        result = _a.sent();
+                        conn.release();
+                        if (result.rowCount > 0) {
+                            return [2 /*return*/, true];
+                        }
+                        else
+                            return [2 /*return*/, false];
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_10 = _a.sent();
+                        throw new Error("Rangers Couldnt be retrieved, ".concat(err_10));
+                    case 4: return [2 /*return*/];
                 }
             });
         });

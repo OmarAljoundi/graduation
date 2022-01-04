@@ -12,39 +12,37 @@ const api = 'http://localhost:5000/rangers/auth'
 const CreatePassword = () => {
   const isUserLogedin = useSelector(({ authedUser }) => (authedUser ? authedUser.signin : false))
   const location = useLocation()
-  if (!location || isUserLogedin === true) {
-    return <Navigate to="/" />
-  }
-
-  const nationality_id = location.state.nationality_id
   const alert = useAlert()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const dispatch = useDispatch()
   useEffect(() => {
-    console.log('component mounted!')
-
     document.body.classList.add('login')
     return () => {
-      console.log('component will unmount')
       document.body.classList.remove('login')
     }
   }, [])
 
+  if (!location || isUserLogedin === true) {
+    return <Navigate to="/" />
+  }
+  const nationality_id = location.state.nationality_id
+
   const handlePasswordUpdate = async (e) => {
     e.preventDefault()
     if (password !== confirmPassword) {
-      console.log(password)
-      console.log(confirmPassword)
-      alert.error('Passwords are not the same!')
+      return alert.error('Passwords are not the same!')
     }
     try {
       const response = await axios.put(api, { nationality_id, password })
       dispatch(handleSetAuthedUser(response.data.info, response.headers.authorization))
-      return <Navigate to="/" />
     } catch (error) {
       console.error(error)
     }
+  }
+
+  if (isUserLogedin) {
+    return <Navigate to="/" />
   }
 
   return (
@@ -52,6 +50,9 @@ const CreatePassword = () => {
       <form className="login-form" onSubmit={(e) => handlePasswordUpdate(e)}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <img src={logo} alt="Logo" />
+        </div>
+        <div style={{ marginBottom: '20px' }}>
+          <h1 style={{ color: 'white' }}>Create Password</h1>
         </div>
         <div className="flex-row">
           <label className="lf--label" htmlFor="password">

@@ -21,7 +21,7 @@ const register = async (_req:Request,res:Response)=>{
         role:body.role
     }
     const result = await rangerObject.register(userInfo)
-    if(result){
+    if(typeof result !== 'string'){
     sgMail.setApiKey(mail_api!)
     const msg = {
     to: result.email, 
@@ -43,7 +43,11 @@ const register = async (_req:Request,res:Response)=>{
     })
     return res.status(201).json(`Account Has been Created`)
   
-}}
+}
+else{
+    return res.sendStatus(400)
+}
+}
 
 const auth = async(_req:Request,res:Response) =>{
     const nationality_id = _req.body.nationality_id
@@ -94,6 +98,29 @@ const createRangerPassword = async(_req:Request,res:Response) =>{
             message:"Login Successfully"
         })
 }
+const chnagePassword = async(_req:Request,res:Response)=>{
+      const oldPassword = _req.body.oldPassword
+      const newPassword = _req.body.newPassword
+      const nationalityID = _req.body.nationality_id
+      const result = await rangerObject.changePassword(oldPassword,newPassword,nationalityID)
+      if(result){
+          return res.sendStatus(200)
+      }
+      else{
+          return res.sendStatus(404)
+      }
+    
+}
+const deleteRanger =async (_req:Request,res:Response) => {
+    const id = _req.params.id
+    const result = await rangerObject.delete(Number(id))
+    if(result){
+        return res.sendStatus(201)
+    }
+    else{
+        return res.sendStatus(404)
+    }
+}
 
 const ranger_routes = (app:express.Application) =>{
     app.get('/rangers',index)
@@ -103,5 +130,7 @@ const ranger_routes = (app:express.Application) =>{
     app.post('/rangers/register',[verifyAuthToken,isRangerAccount],register)
     app.post('/rangers/auth',auth)
     app.put('/rangers/auth',createRangerPassword)
+    app.put('/rangers/auth/changePassword',[verifyAuthToken,isRangerAccount],chnagePassword)
+    app.delete('/rangers/:id',[verifyAuthToken,isRangerAccount],deleteRanger)
 }
 export default ranger_routes

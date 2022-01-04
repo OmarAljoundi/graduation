@@ -59,6 +59,9 @@ function Login() {
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <img src={logo} alt="Logo" />
         </div>
+        <div style={{ marginBottom: '20px' }}>
+          <h1 style={{ color: 'black', fontSize: '4rem' }}>Sign In </h1>
+        </div>
         <div className="flex-row">
           <label className="lf--label" htmlFor="username">
             <svg x="0px" y="0px" width="12px" height="13px">

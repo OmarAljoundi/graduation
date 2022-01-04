@@ -77,8 +77,8 @@ var register = function (_req, res) { return __awaiter(void 0, void 0, void 0, f
                 result = _a.sent();
                 if (result) {
                     clientServer.verify.services(service_id).verifications
-                        .create({ to: "+962".concat(userInfo.phone_number), channel: 'sms' });
-                    return [2 /*return*/, res.setHeader('phoneNumber', userInfo.phone_number).setHeader('user_id', result === null || result === void 0 ? void 0 : result.id).json("Please Vertifiy Your Phone Number")];
+                        .create({ to: "+962".concat(userInfo.phone_number), channel: 'sms' })
+                        .then(function () { return res.setHeader('phoneNumber', userInfo.phone_number).setHeader('user_id', result === null || result === void 0 ? void 0 : result.id).json("Please Vertifiy Your Phone Number"); });
                 }
                 return [2 /*return*/];
         }

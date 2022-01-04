@@ -6,7 +6,8 @@ import { FaUserCircle, FaEnvelope, FaIdCard, FaWindowClose, FaPhoneAlt } from 'r
 import { DialogType, PopupActions, ToastPosition } from 'react-custom-popup'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-
+import { Loading, loadingTimer } from '../Helper/Loading'
+import { removeClass, updateClass } from '../Helper/UpdateStatus'
 const api = 'http://localhost:5000/rangers/register'
 const RangerForm = () => {
   const token = useSelector(({ authedUser }) => (authedUser ? authedUser.token : null))
@@ -21,53 +22,11 @@ const RangerForm = () => {
   const [email, setEmail] = useState('')
   const [natId, setNatId] = useState('')
   const [phone_number, setPhone_number] = useState('')
-  function updateClass(e) {
-    const id = e.target.id
-    switch (id) {
-      case 'first':
-        document.getElementById('firstName').classList.add('active')
-        break
-      case 'last':
-        document.getElementById('lastName').classList.add('active')
-        break
-      case 'email':
-        document.getElementById('emailAddress').classList.add('active')
-        break
-      case 'Nationality':
-        document.getElementById('natId').classList.add('active')
-        break
-      case 'PhoneNumber':
-        document.getElementById('phone').classList.remove('active')
-        break
-      default:
-        break
-    }
-  }
-  function removeClass(e) {
-    const id = e.target.id
-    switch (id) {
-      case 'first':
-        document.getElementById('firstName').classList.remove('active')
-        break
-      case 'last':
-        document.getElementById('lastName').classList.remove('active')
-        break
-      case 'email':
-        document.getElementById('emailAddress').classList.remove('active')
-        break
-      case 'Nationality':
-        document.getElementById('natId').classList.remove('active')
-        break
-      case 'PhoneNumber':
-        document.getElementById('phone').classList.remove('active')
-        break
-      default:
-        break
-    }
-  }
+  const [loading, setLoading] = useState(false)
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(first)
+    setLoading(true)
     try {
       await axios({
         method: 'post',
@@ -81,26 +40,40 @@ const RangerForm = () => {
           role: type['value']
         }
       }).then((response) => {
-        if (response.status === 201) {
-          PopupActions.showToast({
-            text: `Account Has Been Create For ${first + ' ' + last}`,
-            type: DialogType.SUCCESS,
-            position: ToastPosition.BOTTOM_RIGHT,
-            timeoutDuration: 5000
-          })
-          PopupActions.hideModal()
-        } else {
-          PopupActions.showToast({
-            text: `Something Went Wrong, Try Again!`,
-            type: DialogType.DANGER,
-            position: ToastPosition.BOTTOM_RIGHT,
-            timeoutDuration: 5000
-          })
-        }
+        Promise.all([loadingTimer(2500)]).then(() => {
+          if (response.status === 201) {
+            PopupActions.hideModal()
+            PopupActions.showToast({
+              text: `Account Has Been Create For ${first + ' ' + last}`,
+              type: DialogType.SUCCESS,
+              position: ToastPosition.BOTTOM_RIGHT,
+              timeoutDuration: 5000
+            })
+          } else {
+            PopupActions.showToast({
+              text: `Something Went Wrong, Try Again!`,
+              type: DialogType.DANGER,
+              position: ToastPosition.BOTTOM_RIGHT,
+              timeoutDuration: 5000
+            })
+          }
+          setLoading(false)
+        })
       })
     } catch (err) {
-      console.log(err)
+      Promise.all([loadingTimer(2000)]).then(() => {
+        PopupActions.showToast({
+          text: `Something Went Wrong, Try Again! ${err}`,
+          type: DialogType.WARNING,
+          position: ToastPosition.BOTTOM_RIGHT,
+          timeoutDuration: 5000
+        })
+        setLoading(false)
+      })
     }
+  }
+  if (loading === true) {
+    return <Loading type={'bars'} color={'white'} />
   }
 
   return (

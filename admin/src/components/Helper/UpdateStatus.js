@@ -52,3 +52,48 @@ export const viewUser = (userId, rangerID, token, api) => {
     end()
   })
 }
+
+export const updateClass = (e) => {
+  const id = e.target.id
+  switch (id) {
+    case 'first':
+      document.getElementById('firstName').classList.add('active')
+      break
+    case 'last':
+      document.getElementById('lastName').classList.add('active')
+      break
+    case 'email':
+      document.getElementById('emailAddress').classList.add('active')
+      break
+    case 'Nationality':
+      document.getElementById('natId').classList.add('active')
+      break
+    case 'PhoneNumber':
+      document.getElementById('phone').classList.remove('active')
+      break
+    default:
+      break
+  }
+}
+export const removeClass = (e) => {
+  const id = e.target.id
+  switch (id) {
+    case 'first':
+      document.getElementById('firstName').classList.remove('active')
+      break
+    case 'last':
+      document.getElementById('lastName').classList.remove('active')
+      break
+    case 'email':
+      document.getElementById('emailAddress').classList.remove('active')
+      break
+    case 'Nationality':
+      document.getElementById('natId').classList.remove('active')
+      break
+    case 'PhoneNumber':
+      document.getElementById('phone').classList.remove('active')
+      break
+    default:
+      break
+  }
+}

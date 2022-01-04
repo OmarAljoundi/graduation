@@ -82,7 +82,7 @@ class Ranger {
             throw new Error(`Rangers Couldnt be retrieved, ${err}`)
         }
     }
-    async register(u:ranger):Promise<ranger>{
+    async register(u:ranger):Promise<ranger|string>{
         try{
         const conn = await client.connect()
         const sql = "INSERT INTO rangers(name,role,password_digest,email,phone_number,nationality_id,firstTime) Values($1,$2,$3,$4,$5,$6,$7) RETURNING *"
@@ -93,7 +93,7 @@ class Ranger {
     
         }
         catch(err){
-            throw new Error(`Ranger Couldnt be registerd, ${err}`)
+            return String(err)
         }
     }
    async createRangerPassword(u:ranger):Promise<ranger> {
@@ -137,6 +137,42 @@ class Ranger {
         }    
     catch(err){
             throw new Error(`Ranger Couldnt be registerd, ${err}`)
+        }
+    }
+
+   async changePassword(oldPassword:string,newPassword:string,nationality_id:string):Promise<boolean>{
+       try{
+        const { SALT_ROUNDS,BCRYPT_PASSWORD } = process.env
+        const password_digest = bcrypt.hashSync(newPassword + BCRYPT_PASSWORD!,parseInt(SALT_ROUNDS!))
+        const conn = await client.connect()
+        const checkPassword = await this.authenticate(nationality_id,oldPassword)
+        if(checkPassword){
+            const sql = "UPDATE rangers set password_digest = $1 where nationality_id = $2 RETURNING *"
+            const result = await conn.query(sql,[password_digest,nationality_id])
+            conn.release()
+            return true;
+        }
+        else{
+            return false
+        }
+       }
+       catch(err){
+           return false 
+       }
+   }
+  async delete(id:number):Promise<boolean>{
+        try{
+        const conn = await client.connect()
+        const sql = "DELETE from rangers where id=$1"
+        const result = await conn.query(sql,[id])
+        conn.release()
+        if(result.rowCount > 0){
+            return true
+        }
+            else return false
+        }
+        catch(err){
+            throw new Error(`Rangers Couldnt be retrieved, ${err}`)
         }
     }
 

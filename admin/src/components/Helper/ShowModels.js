@@ -1,7 +1,8 @@
 import ImageView from '../Views/ImageView'
 import { PopupActions, AnimationType, OutAnimationType } from 'react-custom-popup'
 import GoogleMapView from '../Views/GoogleMapView'
-import AddRanger from '../AddRanger'
+import RangerForm from '../Views/RangerForm'
+import ChangePassword from '../Views/ChangePassword'
 
 export const showImage = (src) => {
   PopupActions.showModal(<ImageView src={src} />, AnimationType.FADE_IN, OutAnimationType.FADE_OUT)
@@ -15,6 +16,8 @@ export const showMap = (location) => {
 }
 
 export const showForm = () => {
-  PopupActions.showModal(<AddRanger />, AnimationType.FADE_IN, OutAnimationType.FADE_OUT)
+  PopupActions.showModal(<RangerForm />, AnimationType.FADE_IN, OutAnimationType.FADE_OUT)
 }
-
+export const showChangePassword = () => {
+  PopupActions.showModal(<ChangePassword />, AnimationType.FADE_IN, OutAnimationType.FADE_OUT)
+}

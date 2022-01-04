@@ -25,9 +25,10 @@ const register = async (_req:Request,res:Response)=>{
     }
     const result = await userObject.register(userInfo)
     if(result){
-        clientServer.verify.services(service_id!).verifications
-        .create({to:`+962${userInfo.phone_number}`,channel:'sms'})
-        return res.setHeader('phoneNumber',userInfo.phone_number).setHeader('user_id',result?.id!).json("Please Vertifiy Your Phone Number")
+        await clientServer.verify.services(service_id!).verifications
+        .create({to:`+962${userInfo.phone_number}`,channel:'sms'}).then((r)=>{
+            return res.setHeader('phoneNumber',userInfo.phone_number).setHeader('user_id',result?.id!).json("Please Vertifiy Your Phone Number")
+        })
     }
 }
 const verificationsCode = async (_req:Request,res:Response)=>{

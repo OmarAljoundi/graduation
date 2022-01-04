@@ -2,6 +2,7 @@ import authedUser from './authedUser'
 import users from './users'
 import services from './services'
 import complaints from './complaints'
+import rangers from './rangers'
 import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
 import sessionStorage from 'redux-persist/lib/storage/session'
@@ -11,14 +12,15 @@ const reducers = combineReducers({
   authedUser,
   users,
   services,
-  complaints
+  complaints,
+  rangers
 })
 
 const rootPersistConfig = {
   key: 'root',
   storage: sessionStorage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['users', 'services', 'complaints']
+  blacklist: ['users', 'services', 'complaints', 'rangers']
 }
 
 const persistReducers = persistReducer(rootPersistConfig, reducers)
