@@ -27,7 +27,7 @@ const GoogleMapView = ({ location }) => {
         onClick={() => PopupActions.hideModal()}
       />
       <GoogleMap
-        bootstrapURLKeys={{ key: 'AIzaSyA0MWSltbi2G13m_ZJky30oe_V4bzj9_Xw' }}
+        bootstrapURLKeys={{ key: '' }}
         defaultZoom={18}
         defaultCenter={center}
         hoverDistance={15}
