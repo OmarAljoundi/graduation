@@ -30,7 +30,7 @@ function Login() {
     try {
       const response = await axios.post(api, { nationality_id, password })
       if (response.status === 204) {
-        alert.error('Wrong Credentials')
+        alert.error('Wrong Credentials, Try Again')
       } else {
         if (response.data.info.firsttime === false) {
           dispatch(handleSetAuthedUser(response.data.info, response.headers.authorization))
