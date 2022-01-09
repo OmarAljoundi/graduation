@@ -27,8 +27,17 @@ const register = async (_req:Request,res:Response)=>{
     if(result){
         await clientServer.verify.services(service_id!).verifications
         .create({to:`+962${userInfo.phone_number}`,channel:'sms'}).then((r)=>{
-            return res.setHeader('phoneNumber',userInfo.phone_number).setHeader('user_id',result?.id!).json("Please Vertifiy Your Phone Number")
-        })
+            if(r){
+                const token = jwt.sign({ user: result }, String(process.env.TOKEN_SECRET));
+                res.setHeader("authorization",token)
+                res.setHeader("Access-Control-Expose-Headers","*")
+                res.setHeader("Access-Control-Expose-Headers","authorization")
+                return res.json({
+                    info:result,
+                    message:"Login Successfully"
+                })
+            }
+        }).catch(err=>res.sendStatus(404))
     }
 }
 
