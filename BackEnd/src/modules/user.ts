@@ -84,7 +84,7 @@ class User {
         
          try{
             let vertify :boolean = false
-            const status = "vertify"
+            const status = "verify"
             const conn = await client.connect()
             const sql = 'UPDATE users set status=$1 where id=$2'
             await clientServer.verify.services(service_id!)
@@ -127,6 +127,25 @@ class User {
        }
   
    }
+
+   async updateStatus(phone_number:string):Promise<boolean>{
+        
+    try{
+       let vertify :boolean = false
+       const status = "verify"
+       const conn = await client.connect()
+       const sql = 'UPDATE users set status=$1 where phone_number=$2'
+       const result = await conn.query(sql,[status,phone_number])
+       conn.release()
+       return true
+   }
+   catch(err){
+       return false
+   }
+}
+
+
+
 
 
 }

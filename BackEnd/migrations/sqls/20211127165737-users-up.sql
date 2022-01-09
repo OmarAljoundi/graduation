@@ -7,6 +7,6 @@ CREATE TABLE users (
     password_digest Varchar,
     phone_number Varchar,
     nationality_id Varchar unique,
-    status varchar DEFAULT 'not vertifiy',
+    status varchar DEFAULT 'not verify',
     create_at TIMESTAMPTZ DEFAULT Now()
 );

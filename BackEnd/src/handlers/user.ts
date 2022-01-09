@@ -31,6 +31,16 @@ const register = async (_req:Request,res:Response)=>{
         })
     }
 }
+
+const resendCode = async (_req:Request,res:Response)=>{
+    const phone_number = _req.body.phone_number
+        await clientServer.verify.services(service_id!).verifications
+        .create({to:`+962${phone_number}`,channel:'sms'}).then((r)=>{
+            return res.sendStatus(201)
+        })
+        .catch(err=>res.sendStatus(404))
+}
+
 const verificationsCode = async (_req:Request,res:Response)=>{
     const phoneNumber = _req.body.phone_number
     const code = _req.body.code
@@ -81,12 +91,27 @@ const changePassword = async (_req:Request,res:Response)=>{
    
 }
 
+const updateStatus = async (_req:Request,res:Response)=>{
+    const phone_number = _req.body.phone_number
+    const result = await userObject.updateStatus(phone_number)
+    if(result){
+        return res.json(result)
+    }
+    else {
+        return res.sendStatus(404)
+    }
+   
+}
+
+
 const user_routes = (app:express.Application) =>{
     app.get('/users',index)
     app.put('/users/changepassword',isUserAccount,changePassword)
     app.get('/users/:id',[verifyAuthToken,isRangerAccount],getUserById)
     app.post('/register',isUserExist,register)
+    app.post('/resend',resendCode)
     app.post('/users/auth',isUserVaild,auth)
     app.put('/register',verificationsCode)
+    app.put('/updateStatus',updateStatus)
 }
 export default user_routes
