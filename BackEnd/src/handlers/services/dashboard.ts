@@ -56,6 +56,7 @@ export const isRangerExist = async (_req:Request,res:Response,next:()=>void)=>{
 
 export const isUserVaild = async (_req:Request,res:Response,next:()=>void)=>{
   const phone_number = _req.body.phone_number
+    const password = _req.body.password
   const result = await dashboardObject.isUserExist(phone_number)
   if(result){
     const vertifiy = await dashboardObject.isUserVertified(phone_number)
@@ -63,7 +64,14 @@ export const isUserVaild = async (_req:Request,res:Response,next:()=>void)=>{
       next()
     }
     else{
-      return res.sendStatus(403)
+      const valid = await userObj.authenticate(phone_number,password)
+      if(valid){
+        return res.sendStatus(403)
+      }
+      else{
+        return res.sendStatus(401)
+      }
+      
     }
   }
   else{
