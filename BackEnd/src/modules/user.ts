@@ -80,19 +80,19 @@ class User {
         }
     }
 
-    async vertifiyPhoneNumber(phone_number:string,code:string,user_id:bigint):Promise<boolean>{
+    async vertifiyPhoneNumber(phone_number:string,code:string):Promise<boolean>{
         
          try{
             let vertify :boolean = false
             const status = "verify"
             const conn = await client.connect()
-            const sql = 'UPDATE users set status=$1 where id=$2'
+            const sql = 'UPDATE users set status=$1 where phone_number=$2'
             await clientServer.verify.services(service_id!)
             .verificationChecks
             .create({to: `+962${phone_number}`, code: code})
             .then(async verification_check => {
                  if(verification_check.status === "approved"){
-                    const result = await conn.query(sql,[status,user_id])
+                    const result = await conn.query(sql,[status,phone_number])
                     conn.release()
                     vertify = true
                 }

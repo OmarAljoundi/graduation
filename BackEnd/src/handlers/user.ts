@@ -53,8 +53,7 @@ const resendCode = async (_req:Request,res:Response)=>{
 const verificationsCode = async (_req:Request,res:Response)=>{
     const phoneNumber = _req.body.phone_number
     const code = _req.body.code
-    const user_id = _req.body.user_id
-    const result = await userObject.vertifiyPhoneNumber(phoneNumber,code,user_id)
+    const result = await userObject.vertifiyPhoneNumber(phoneNumber,code)
     if(result){
         return res.json("Vertifed")
     }
@@ -112,6 +111,26 @@ const updateStatus = async (_req:Request,res:Response)=>{
    
 }
 
+const forgetPassword = async (_req:Request,res:Response)=>{
+    const phone_number = _req.body.phone_number
+    const password = _req.body.password
+    const result = await userObject.changePassword(phone_number,password)
+    if(result){
+        const token = jwt.sign({ user: result }, String(process.env.TOKEN_SECRET));
+        res.setHeader("authorization",token)
+        res.setHeader("Access-Control-Expose-Headers","*")
+        res.setHeader("Access-Control-Expose-Headers","authorization")
+        return res.json({
+            info:result,
+            message:"Login Successfully"
+        })
+    }
+    else {
+        return res.sendStatus(404)
+    }
+   
+}
+
 
 const user_routes = (app:express.Application) =>{
     app.get('/users',index)
@@ -122,5 +141,6 @@ const user_routes = (app:express.Application) =>{
     app.post('/users/auth',isUserVaild,auth)
     app.put('/register',verificationsCode)
     app.put('/updateStatus',updateStatus)
+    app.put('/forgotpassword',forgetPassword)
 }
 export default user_routes
