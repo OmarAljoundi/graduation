@@ -55,8 +55,11 @@ input:focus {
 }
 .rangerPage {
   max-width: 38em;
-  padding: 1em 3em 2em 3em;
+  padding: 3em 3em 2em 3em;
   margin: 0em auto;
+}
+.containerRanger{
+  padding: 60px 30px ;
 }
 .input-icon {
   background-color: #fff;
@@ -120,4 +123,8 @@ input:focus {
 .no-arrow::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.disabled{
+  background-color: lightgrey;
 }

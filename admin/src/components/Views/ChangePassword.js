@@ -1,5 +1,8 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import '../../style/Form.css'
+import '../../style/login.scss'
+
 import {
   AnimationType,
   DialogType,
@@ -8,7 +11,7 @@ import {
   ToastPosition,
   usePopup
 } from 'react-custom-popup'
-import { FaKey } from 'react-icons/fa'
+import { FaEnvelope, FaIdCard, FaKey, FaPhoneAlt, FaUserCircle,FaCog } from 'react-icons/fa'
 import { FaWindowClose } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleResetAuthedUser } from '../../actions/authedUser'
@@ -17,6 +20,7 @@ import { removeClass, updateClass } from '../Helper/UpdateStatus'
 
 // import { handleResetAuthedUser } from '../../actions/authedUser'
 const api = 'http://localhost:5000/rangers/auth/changePassword'
+
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState('')
   const [password, setPassword] = useState('')
@@ -99,8 +103,79 @@ const ChangePassword = () => {
         onClick={() => PopupActions.hideModal()}
       />
       <div className="containerRanger">
-        <div className="fromHeader">
-          <h1>Change Password</h1>
+      <div className="NameContainer">
+          <div className="input-container">
+            <div className="input-icon" id="firstName">
+              <FaUserCircle className="icon" fill="black" size={36} />
+            </div>
+            <input
+              type={'text'}
+              id="first"
+              value={authedUser.name.split(' ')[0]}
+              disabled={true}
+              className='disabled'
+            />
+          </div>
+          <div className="input-container">
+            <div className="input-icon" id="lastName">
+              <FaUserCircle className="icon" fill="black" size={36} />
+            </div>
+            <input
+              type={'text'}
+              id="last"
+              value={authedUser.name.split(' ')[1]}
+              disabled={true}
+              className='disabled'
+            />
+          </div>
+        </div>
+        <div className="input-container" style={{ width: '100%' }}>
+          <div className="input-icon" id="emailAddress">
+            <FaEnvelope className="icon" fill="black" size={36} />
+          </div>
+          <input
+            type={'text'}
+            id="email"
+            disabled={true}
+            value={authedUser.email}
+            className='disabled'
+          />
+        </div>
+        <div className="input-container" style={{ width: '100%' }}>
+          <div className="input-icon" id="natId">
+            <FaIdCard className="icon" fill="black" size={36} />
+          </div>
+          <input
+            type={'number'}
+            id="Nationality"
+            className="no-arrow disabled"
+            disabled={true}
+            value={authedUser.nationality_id}
+            
+          />
+        </div>
+        <div className="input-container" style={{ width: '100%' }}>
+          <div className="input-icon" id="phone">
+            <FaPhoneAlt className="icon" fill="black" size={36} />
+          </div>
+          <input
+            type={'number'}
+            id="PhoneNumber"
+            className="no-arrow disabled"
+            disabled={true}
+            value={authedUser.phone_number}
+          />
+        </div>
+        <div className="input-container" style={{ width: '100%' }}>
+          <div className="input-icon" id="phone">
+            <FaCog className="icon" fill="black" size={36} />
+          </div>
+          <input
+            type={'text'}
+            disabled={true}
+            value={authedUser.role}
+            className='disabled'
+          />
         </div>
         <div className="input-container" style={{ width: '100%' }}>
           <div className="input-icon" id="firstName">
