@@ -7,7 +7,7 @@ class Dashboard {
             const conn = await client.connect()
             const sql = "SELECT status from users where phone_number=$1"
             const result = await conn.query(sql,[phone_number])
-            if(result.rows[0].status === "vertify"){
+            if(result.rows[0].status === "verify"){
                return true
             }
             else{

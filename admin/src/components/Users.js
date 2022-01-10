@@ -17,8 +17,8 @@ const options = [
   { value: 'National ID', label: 'National ID' }
 ]
 const options2 = [
-  { value: 'Verified', label: 'Verified' },
-  { value: 'Not Verified', label: 'Not Verified' }
+  { value: 'verify', label: 'verify' },
+  { value: 'not verify', label: 'not verify' }
 ]
 const options3 = [
   { value: 'Latest', label: 'Latest' },
@@ -70,11 +70,11 @@ class Users extends Component {
         tempUsers = users ? users : null
     }
     switch (status ? status['value'] : 'None') {
-      case 'Verified':
-        tempUsers = tempUsers.filter((user) => user.status === 'vertify')
+      case 'verify':
+        tempUsers = tempUsers.filter((user) => user.status === 'verify')
         break
-      case 'Not Verified':
-        tempUsers = tempUsers.filter((user) => user.status === 'not vertifiy')
+      case 'not verify':
+        tempUsers = tempUsers.filter((user) => user.status === 'not verify')
         break
     }
     switch (sort ? sort['value'] : 'None') {
@@ -186,7 +186,7 @@ class Users extends Component {
                       </td>
                       <td title="Status">
                         {' '}
-                        {user.status === 'vertify' ? (
+                        {user.status === 'verify' ? (
                           <VerifiedIcon size={24} fill="green" />
                         ) : (
                           <UnverifiedIcon size={24} fill="red" />
