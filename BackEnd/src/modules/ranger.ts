@@ -96,6 +96,22 @@ class Ranger {
             return String(err)
         }
     }
+    async registerAdmin(u:ranger):Promise<ranger|string>{
+        const { SALT_ROUNDS,BCRYPT_PASSWORD } = process.env
+        try{
+        const conn = await client.connect()
+        const password_digest = bcrypt.hashSync(u.password_digest + BCRYPT_PASSWORD!,parseInt(SALT_ROUNDS!))
+        const sql = "INSERT INTO rangers(name,role,password_digest,email,phone_number,nationality_id,firstTime) Values($1,$2,$3,$4,$5,$6,$7) RETURNING *"
+        //const password_digest = Math.random().toString(36).substr(2, 6) + Math.random().toString(36).substr(2, 6) + Math.random().toString(36).substr(2, 6);
+        const result = await conn.query(sql,[u.name,u.role,password_digest,u.email,u.phone_number,u.nationality_id,false])
+        conn.release()
+        return result.rows[0]
+    
+        }
+        catch(err){
+            return String(err)
+        }
+    }
    async createRangerPassword(u:ranger):Promise<ranger> {
         const { SALT_ROUNDS,BCRYPT_PASSWORD } = process.env
         try{

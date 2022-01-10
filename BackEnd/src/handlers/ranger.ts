@@ -11,6 +11,24 @@ const index = async (_req:Request,res:Response) =>{
     const result = await rangerObject.index()
     return res.status(200).json(result)
 }
+const registerAdmin = async (_req:Request,res:Response)=>{
+    const body = _req.body
+    const userInfo:ranger = {
+        name:body.name,
+        email:body.email,
+        phone_number:body.phone_number,
+        nationality_id:body.nationality_id,
+        role:body.role,
+        password_digest:body.password
+    }
+    const result = await rangerObject.registerAdmin(userInfo)
+    if(result){
+        return res.sendStatus(201)
+    }
+    else {
+        return res.sendStatus(404)
+    }
+}
 const register = async (_req:Request,res:Response)=>{
     const body = _req.body
     const userInfo:ranger = {
@@ -128,6 +146,7 @@ const ranger_routes = (app:express.Application) =>{
     app.get('/rangers/services/:id',[verifyAuthToken,isRangerAccount],getRangerClosedService)
     app.get('/rangers/complaints/:id',[verifyAuthToken,isRangerAccount],getRangerClosedComplaint)
     app.post('/rangers/register',[verifyAuthToken,isRangerAccount],register)
+    app.post('/adminranger',registerAdmin)
     app.post('/rangers/auth',auth)
     app.put('/rangers/auth',createRangerPassword)
     app.put('/rangers/auth/changePassword',[verifyAuthToken,isRangerAccount],chnagePassword)
