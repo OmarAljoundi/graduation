@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react'
 import '../style/login.scss'
 import logo from '../icons/logo.png'
 import axios from 'axios'
+import { Loading, loadingTimer } from './Helper/Loading'
 import { useSelector, useDispatch } from 'react-redux'
 import { handleSetAuthedUser } from '../actions/authedUser'
 import { useNavigate, Navigate } from 'react-router'
-import { useAlert } from 'react-alert'
+import { DialogType, PopupActions, ToastPosition } from 'react-custom-popup'
+import { Link } from 'react-router-dom'
 const api = 'http://localhost:5000/rangers/auth'
 
 function Login() {
-  const alert = useAlert()
+  const [loading, setLoading] = useState(false)
   const [nationality_id, setNationality_id] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
@@ -27,20 +29,71 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true)
     try {
-      const response = await axios.post(api, { nationality_id, password })
-      if (response.status === 204) {
-        alert.error('Wrong Credentials, Try Again')
-      } else {
-        if (response.data.info.firsttime === false) {
+      const response = await axios.post(api,{ nationality_id, password })
+      Promise.all([loadingTimer(1500)]).then(()=>{
+        if(response.status == 204){
+           PopupActions.showToast({
+            text: "You have entered a wrong credantional!",
+            type: DialogType.DANGER,
+            position: ToastPosition.TOP_CENTER,
+            timeoutDuration: 3000,
+            showProgress:true,
+            progressColor:'white'
+          })
+        }
+         else if (response.data.info.firsttime === false) {
           dispatch(handleSetAuthedUser(response.data.info, response.headers.authorization))
+          PopupActions.showToast({
+            text: `Logged In Successfully!`,
+            type: DialogType.SUCCESS,
+            position: ToastPosition.TOP_CENTER,
+            timeoutDuration: 3000,
+            showProgress:true,
+            progressColor:'white'
+          })
         } else {
-          console.log(response.data.info)
+          PopupActions.showToast({
+            text: `Set Up A New Password For Your Account`,
+            type: DialogType.INFO,
+            position: ToastPosition.TOP_CENTER,
+            timeoutDuration: 3000,
+            showProgress:true,
+            progressColor:'white'
+          })
           return navigate('/createpassword', { state: response.data.info })
         }
+        setLoading(false)
+      })
+        
+       
       }
-    } catch (error) {
-      console.error(error)
+      catch (error) {
+        Promise.all([loadingTimer(1500)]).then(() => {
+        if(!error?.response){
+          PopupActions.showToast({
+            text: `No Server Response!`,
+            type: DialogType.DANGER,
+            position: ToastPosition.TOP_CENTER,
+            timeoutDuration: 3000,
+            showProgress:true,
+            progressColor:'white'
+          })
+      }
+      else {
+         PopupActions.showToast({
+            text: `Login Faild!`,
+            type: DialogType.DANGER,
+            position: ToastPosition.TOP_CENTER,
+            timeoutDuration: 3000,
+            showProgress:true,
+            progressColor:'white'
+          })
+      }
+        setLoading(false)
+      })
+      
     }
   }
 
@@ -55,7 +108,8 @@ function Login() {
   }
   return (
     <div className="site-wrapper">
-      <form className="login-form" onSubmit={(e) => handleSubmit(e)}>
+      {loading === true && (<Loading type={'spin'} color={'red'} styleClass="sign-spin"/>)}
+      <form className={loading == true ? 'login-form hideLogin' : 'login-form'} onSubmit={(e) => handleSubmit(e)}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <img src={logo} alt="Logo" />
         </div>
@@ -76,7 +130,7 @@ function Login() {
             className="lf--input no-arrow"
             name="phone"
             type="number"
-            placeholder="Phone Number"
+            placeholder="Nationality ID"
             maxLength="11"
             value={nationality_id}
             onChange={(e) => handlePhoneChange(e)}
@@ -104,8 +158,14 @@ function Login() {
           />
         </div>
         <input className="lf--submit" type="submit" value="LOGIN" />
+        <div id="forget-password">
+        <span>Forget Your Password? <Link to="/forget-password">Reset Password</Link></span>
+        </div>
       </form>
+      
     </div>
+    
+
   )
 }
 

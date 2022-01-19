@@ -33,7 +33,9 @@ const Service = () => {
     label: 'Proposal Request'
   })
   const dispatch = useDispatch()
-  const token = useSelector(({ authedUser }) => (authedUser ? authedUser.token : null))
+  const authedUser = useSelector(({ authedUser }) => (authedUser ? authedUser : null))
+  let token = authedUser.token
+  let role = authedUser.role
 
   useEffect(async () => {
     try {
@@ -107,7 +109,7 @@ const Service = () => {
               onChange={(e) => setQuery(e.target.value)}
             />
             <Select
-              classNamePrefix="searchBarSelect"
+              classNamePrefix="AllSelect"
               options={options4}
               onChange={setServiceType}
               defaultValue={options4[0]}
@@ -116,7 +118,7 @@ const Service = () => {
           </div>
           <div className="form" style={{ float: 'right', justifyContent: 'end' }}>
             <Select
-              classNamePrefix="searchBarSelect"
+              classNamePrefix="AllSelect"
               options={options2}
               value={status}
               isClearable={true}
@@ -125,7 +127,7 @@ const Service = () => {
               isSearchable={false}
             />
             <Select
-              classNamePrefix="searchBarSelect"
+              classNamePrefix="AllSelect"
               options={options3}
               value={sort}
               isClearable={true}
@@ -136,7 +138,7 @@ const Service = () => {
           </div>
         </div>
       </div>
-      <ServiceType service={filterService()} type={serviceType} token={token}></ServiceType>
+      <ServiceType service={filterService()} type={serviceType} token={token} role={role}></ServiceType>
     </Fragment>
   )
 }

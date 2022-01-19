@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Loading, loadingTimer } from './Helper/Loading'
 
 import { handleDeleteRanger, handleSetRangers } from '../actions/rangers'
-import { ArrowLeftIcon, SearchIcon } from '@primer/octicons-react'
+import { ArrowLeftIcon, SearchIcon,CheckCircleFillIcon } from '@primer/octicons-react'
 import { Link } from 'react-router-dom'
 import Select from 'react-select'
 import '../style/users.scss'
@@ -148,6 +148,7 @@ const Rangers = () => {
   return (
     <Fragment>
       <div className="centerbox">
+        {loading === true && <Loading type={'bubbles'} color={'red'} styleClass="sign-spin"/>}
         <div className="main-form-container" style={{ opacity: loading ? '0.5' : '1' }}>
           <div className="form" style={{ justifyContent: 'start' }}>
             <Link to="/">
@@ -168,7 +169,7 @@ const Rangers = () => {
             />
 
             <Select
-              classNamePrefix="select"
+              classNamePrefix="AllSelect"
               options={options}
               onChange={setType}
               defaultValue={options[0]}
@@ -177,7 +178,7 @@ const Rangers = () => {
           </div>
           <div className="form" style={{ float: 'right', justifyContent: 'end' }}>
             <Select
-              classNamePrefix="select"
+              classNamePrefix="AllSelect"
               options={options2}
               isClearable={true}
               placeholder="Select Role .."
@@ -185,7 +186,7 @@ const Rangers = () => {
               isSearchable={false}
             />
             <Select
-              classNamePrefix="select"
+              classNamePrefix="AllSelect"
               options={options3}
               isClearable={true}
               placeholder="Sort By .."
@@ -202,7 +203,6 @@ const Rangers = () => {
               <th>ID</th>
               <th>Name</th>
               <th>E-mail</th>
-              <th>Birth date</th>
               <th>Phone Number</th>
               <th>Nationality ID</th>
               <th>Create At</th>
@@ -212,31 +212,38 @@ const Rangers = () => {
           </thead>
           <tbody>
             {Object.values(filterRangers()).map((ranger, index) => (
-              <tr key={ranger.id}>
+              <tr key={ranger.id} className={authedUser.nationality_id == ranger.nationality_id ? "youraccount" : ""}>
                 <td title="ID">{ranger.id}</td>
                 <td title="Name">{ranger.name}</td>
                 <td title="Email">{ranger.email}</td>
-                <td title="Birth date">{dateFormat(ranger.b_date, ' yyyy, mmmm,dd')}</td>
                 <td title="Phone Number">{ranger.phone_number}</td>
                 <td title="Nationality ID">{ranger.nationality_id}</td>
                 <td title="Create At">
                   {dateFormat(ranger.create_at, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}
                 </td>
                 <td title="Role">{ranger.role}</td>
+                
                 <td title="Remove" style={{ textAlign: 'center' }}>
+                  {authedUser.nationality_id != ranger.nationality_id ?
                   <FaWindowClose
                     fill="red"
                     size={32}
                     style={{ cursor: 'pointer' }}
                     onClick={() => deleteRanger(ranger.id, index)}
                   />
+                  :
+                  <CheckCircleFillIcon fill="green" size={32} />
+}
                 </td>
+
+                
+                
               </tr>
             ))}
           </tbody>
         </table>
       </main>
-      {loading === true && <Loading type={'bars'} color={'white'} />}
+      
     </Fragment>
   )
 }

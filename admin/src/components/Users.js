@@ -126,7 +126,7 @@ class Users extends Component {
               />
 
               <Select
-                classNamePrefix="searchBarSelect"
+                classNamePrefix="AllSelect"
                 options={options}
                 onChange={this.handleTypeChange}
                 defaultValue={options[0]}
@@ -135,7 +135,7 @@ class Users extends Component {
             </div>
             <div className="form" style={{ float: 'right', justifyContent: 'end' }}>
               <Select
-                classNamePrefix="searchBarSelect"
+                classNamePrefix="AllSelect"
                 options={options2}
                 value={status}
                 isClearable={true}
@@ -144,7 +144,7 @@ class Users extends Component {
                 isSearchable={false}
               />
               <Select
-                classNamePrefix="searchBarSelect"
+                classNamePrefix="AllSelect"
                 options={options3}
                 value={sort}
                 isClearable={true}

@@ -9,6 +9,7 @@ import { Routes, Route } from 'react-router-dom'
 import Complaints from './Complaints'
 import CreatePassoword from './CreatePassword'
 import Rangers from './Rangers'
+import ForgetPassword from './ForgetPassword'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/complaints" element={<Complaints />} />
         <Route path="/rangers" element={<Rangers />} />
         <Route path="/createPassword" element={<CreatePassoword />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
       </Routes>
     </Router>
   )

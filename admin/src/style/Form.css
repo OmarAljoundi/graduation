@@ -18,9 +18,16 @@ input {
   border-bottom-left-radius: 0;
   border: none;
 }
-input:focus {
+/* input:focus {
   outline: 0;
   border-color: #bd8200;
+} */
+.form-control:focus{
+  outline: auto!important;
+border-color: #bd8200;
+}
+.content{
+  justify-content: center;
 }
 .fromHeader {
   text-align: center;
@@ -92,6 +99,7 @@ input:focus {
 .rangerSelect__menu {
   color: black;
 }
+
 .formSelect {
   width: 100% !important;
   margin-left: 0;

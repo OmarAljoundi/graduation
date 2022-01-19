@@ -690,4 +690,9 @@ label {
     -o-transform: rotate(30deg) translate(0px, 0px);
     transform: rotate(30deg) translate(0px, 0px);
   }
+  
+}
+.disabledNav{
+    opacity: 0.5;
+    pointer-events: none;
 }

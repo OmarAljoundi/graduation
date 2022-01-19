@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import Client from "twilio";
 import { isRangerAccount, isUserAccount, isUserExist,isUserVaild, verifyAuthToken } from './services/dashboard';
 
-
 const { token,sid,service_id } = process.env
 const clientServer = Client(sid,token)
 const userObject = new User()

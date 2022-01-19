@@ -20,7 +20,8 @@ const getUserApi = 'http://localhost:5000/users'
 const getRangerApiForComplaint = 'http://localhost:5000/rangers/complaints'
 
 const Complaints = () => {
-  const token = useSelector(({ authedUser }) => (authedUser ? authedUser.token : null))
+  const authedUser = useSelector(({ authedUser }) => (authedUser ? authedUser : null))
+  let token = authedUser.token
   const complaints = useSelector(({ complaints }) => (complaints ? Object.values(complaints) : []))
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('')
@@ -198,7 +199,8 @@ const Complaints = () => {
                         <div className="containerTwo">
                           <button
                             id="Completed"
-                            className="Completed"
+                            className={!authedUser.role.includes("Execute") ? "Completed disabledBtn" : "Completed"}
+                            disabled={!authedUser.role.includes("Execute")}
                             data={complaint.id}
                             onClick={(e) => updateStatus(e)}
                           ></button>
@@ -206,7 +208,7 @@ const Complaints = () => {
                       )}
                     </td>
                     <td>
-                      {complaint.status === 'pending' ? (
+                      {complaint.status === 'Needs Approval' ? (
                         <span>Pending</span>
                       ) : (
                         <div

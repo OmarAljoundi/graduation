@@ -12,15 +12,17 @@ const Nav = ({ name, role }) => {
       allow: true
     },
     { name: 'Services', icon: <FaCogs className="iconImage" />, link: 'services', allow: true },
+
+    
+    { name: 'Edit Profile', icon: <FaUserEdit className="iconImage" />, link: '', allow: true },
+    { name: 'Logout', icon: <FaSignOutAlt className="iconImage" />, link: 'logout', allow: true },
     {
       name: 'Add Ranger',
       icon: <FaUserPlus className="iconImage" />,
       link: '',
       allow: role.includes('Create') ? true : false
     },
-    { name: 'All Rangers', icon: <FaUsers className="iconImage" />, link: 'rangers', allow: true },
-    { name: 'Edit Profile', icon: <FaUserEdit className="iconImage" />, link: '', allow: true },
-    { name: 'Logout', icon: <FaSignOutAlt className="iconImage" />, link: 'logout', allow: true }
+        { name: 'All Rangers', icon: <FaUsers className="iconImage" />, link: 'rangers', allow: role.includes('Create') ? true : false },
   ]
 
   return (
@@ -36,8 +38,7 @@ const Nav = ({ name, role }) => {
                 <div className="hexagon-menu clear">
                   {NavMenu.map(
                     (item) =>
-                      item.allow && (
-                        <div className="hexagon-item" key={item.name}>
+                        <div className={item.allow ? "hexagon-item" : "hexagon-item disabledNav" } key={item.name} >
                           <div className="hex-item">
                             <div></div>
                             <div></div>
@@ -77,7 +78,6 @@ const Nav = ({ name, role }) => {
                             </svg>
                           </Link>
                         </div>
-                      )
                   )}
                 </div>
               </div>

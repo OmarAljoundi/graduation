@@ -79,7 +79,7 @@ class Ranger {
         return result.rowCount > 0 ? result.rows[0] : null
         }
         catch(err){
-            throw new Error(`Rangers Couldnt be retrieved, ${err}`)
+            return null
         }
     }
     async register(u:ranger):Promise<ranger|string>{
@@ -121,7 +121,6 @@ class Ranger {
         const result = await conn.query(sql,[password_digest,false,u.nationality_id])
         conn.release()
         return result.rows[0]
-    
         }
         catch(err){
             throw new Error(`Ranger Couldnt be registerd, ${err}`)
@@ -152,7 +151,7 @@ class Ranger {
         }
         }    
     catch(err){
-            throw new Error(`Ranger Couldnt be registerd, ${err}`)
+            return null
         }
     }
 

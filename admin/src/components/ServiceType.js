@@ -13,7 +13,7 @@ const getRangerApiForService = 'http://localhost:5000/rangers/services'
 
 const ServiceType = (props) => {
   const dispatch = useDispatch()
-  const { service, type, token } = props
+  const { service, type, token,role } = props
 
   async function updateStatus(e) {
     const button = e.target
@@ -131,7 +131,8 @@ const ServiceType = (props) => {
                         <div className="containerTwo">
                           <button
                             id="approved"
-                            className="approve"
+                            className={!role.includes("Execute") ? "approve disabledBtn" : "approve"}
+                            disabled={!role.includes("Execute")}
                             data={service.id}
                             onClick={(e) => updateStatus(e)}
                           ></button>
@@ -139,7 +140,8 @@ const ServiceType = (props) => {
                         <div className="containerTwo">
                           <button
                             id="declined"
-                            className="decline"
+                            className={!role.includes("Execute") ? "decline disabledBtn" : "decline"}
+                            disabled={!role.includes("Execute")}
                             data={service.id}
                             onClick={(e) => updateStatus(e)}
                           ></button>

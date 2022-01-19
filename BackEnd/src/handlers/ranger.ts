@@ -3,7 +3,12 @@ import express,{Request,Response} from 'express'
 import jwt from "jsonwebtoken";
 import { isRangerAccount, isRangerExist, verifyAuthToken } from './services/dashboard';
 import sgMail from "@sendgrid/mail"
+import Client from "twilio";
+
 const { mail_api } = process.env
+
+const { token,sid,service_id } = process.env
+const clientServer = Client(sid,token)
 
 
 const rangerObject = new Ranger()
@@ -82,7 +87,7 @@ const auth = async(_req:Request,res:Response) =>{
         })
     }
     else {
-        return res.status(204)
+        return res.sendStatus(204)
     }
 }
 const getRangerById = async (_req:Request,res:Response) =>{
@@ -139,6 +144,52 @@ const deleteRanger =async (_req:Request,res:Response) => {
         return res.sendStatus(404)
     }
 }
+const resendCode = async (_req:Request,res:Response)=>{
+    const nationality_id = _req.body.nationality_id
+    const object = await rangerObject.checkRanger(nationality_id)
+    if(object){
+        await clientServer.verify.services(service_id!).verifications
+        .create({to:`+962${object.phone_number}`,channel:'sms'}).then((r)=>{
+            return res.json({phone_number:object.phone_number})
+        })
+        .catch(err=>{
+            console.log(err)
+            res.sendStatus(404)
+        }
+            )
+    }
+    else{
+        return res.sendStatus(204)
+    }
+}
+
+const resetRangerPassword = async(_req:Request,res:Response) =>{
+    const body = _req.body
+    const userInfo:ranger = {
+        password_digest:body.password,
+        nationality_id:body.nationality_id
+    }
+    const code = body.code
+    const phone_number = body.phoneNumber
+
+     await clientServer.verify.services(service_id!)
+            .verificationChecks
+            .create({to: `+962${phone_number}`, code: code})
+            .then(async verification_check => {
+                 if(verification_check.status === "approved"){
+                  const result = await rangerObject.createRangerPassword(userInfo)
+                  const token = jwt.sign({ ranger: result }, String(process.env.TOKEN_SECRET));
+                        res.setHeader("authorization",token)
+                        res.setHeader("Access-Control-Expose-Headers","*")
+                        res.setHeader("Access-Control-Expose-Headers","authorization")
+                        return res.json({
+                            info:result,
+                            message:"Login Successfully"
+                        })
+                }
+            })
+            .catch(err=>{return res.sendStatus(404)})
+}
 
 const ranger_routes = (app:express.Application) =>{
     app.get('/rangers',index)
@@ -148,7 +199,9 @@ const ranger_routes = (app:express.Application) =>{
     app.post('/rangers/register',[verifyAuthToken,isRangerAccount],register)
     app.post('/adminranger',registerAdmin)
     app.post('/rangers/auth',auth)
+    app.post('/ranger/resendCode',resendCode)
     app.put('/rangers/auth',createRangerPassword)
+    app.put('/reset-password',resetRangerPassword)
     app.put('/rangers/auth/changePassword',[verifyAuthToken,isRangerAccount],chnagePassword)
     app.delete('/rangers/:id',[verifyAuthToken,isRangerAccount],deleteRanger)
 }
