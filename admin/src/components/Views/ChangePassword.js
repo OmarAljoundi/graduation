@@ -70,7 +70,8 @@ const ChangePassword = () => {
               text: `Couldn't Change Password!`,
               type: DialogType.DANGER,
               position: ToastPosition.BOTTOM_RIGHT,
-              timeoutDuration: 5000
+              timeoutDuration: 5000,
+              showCloseButton:false
             })
           }
           setLoading(false)
@@ -82,7 +83,8 @@ const ChangePassword = () => {
           text: `Something Went Wrong, Try Again! ${err}`,
           type: DialogType.WARNING,
           position: ToastPosition.BOTTOM_RIGHT,
-          timeoutDuration: 5000
+          timeoutDuration: 5000,
+          showCloseButton:false
         })
         setLoading(false)
       })

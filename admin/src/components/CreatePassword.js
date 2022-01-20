@@ -40,7 +40,8 @@ const CreatePassword = () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
     }
     try {
@@ -53,7 +54,8 @@ const CreatePassword = () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
           setLoading(false)
       })
@@ -68,7 +70,8 @@ const CreatePassword = () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
       }
       else {
@@ -78,7 +81,8 @@ const CreatePassword = () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
       }
         setLoading(false)
@@ -92,7 +96,7 @@ const CreatePassword = () => {
 
   return (
     <div className="site-wrapper">
-      {loading === true && (<Loading type={'spin'} color={'red'} styleClass="sign-spin"/>)}
+      {loading === true && (<Loading type={'bubbles'} color={'red'} styleClass="sign-spin"/>)}
       <form className="login-form" onSubmit={(e) => handlePasswordUpdate(e)}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <img src={logo} alt="Logo" />
@@ -117,7 +121,6 @@ const CreatePassword = () => {
             name="passowrd"
             type="password"
             placeholder="Password"
-            maxLength="11"
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
             required

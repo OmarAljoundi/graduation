@@ -8,7 +8,7 @@ import Select from 'react-select'
 import { handleSetUsers } from '../actions/users'
 import { connect } from 'react-redux'
 import dateFormat from 'dateformat'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 
 const api = 'http://localhost:5000/users'
 const options = [
@@ -102,7 +102,12 @@ class Users extends Component {
 
   render() {
     const { status, sort } = this.state
-    const { users } = this.props
+    const { users,authedUser} = this.props
+
+    if(!authedUser.signin){
+    return <Navigate to='/'/>
+  }
+
     return (
       <Fragment>
         <div className="centerbox">
@@ -203,9 +208,10 @@ class Users extends Component {
   }
 }
 
-function mapStateToProps({ users }) {
+function mapStateToProps({ users,authedUser }) {
   return {
-    users: users ? users : null
+    users: users ? users : null,
+    authedUser
   }
 }
 export default connect(mapStateToProps, { handleSetUsers })(Users)

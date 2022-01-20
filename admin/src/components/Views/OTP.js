@@ -1,21 +1,25 @@
 import axios from 'axios';
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import Countdown from "react-countdown";
 import { DialogType, PopupActions, ToastPosition } from 'react-custom-popup';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { handleSetAuthedUser } from '../../actions/authedUser';
 import { loadingTimer,Loading } from '../Helper/Loading';
 const api = 'http://localhost:5000/ranger/resendCode'
 const api2 = "http://localhost:5000/reset-password"
 const OTP = ({phoneNumber,nationality_id,password}) => {
     const [resend,setResend] = useState(0)
-     const [code,setCode] = useState("")
-      const isUserLogedin = useSelector(({ authedUser }) => (authedUser ? authedUser.signin : false))
-     const [loading, setLoading] = useState(false)
+    const [code,setCode] = useState("")
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
-    let currentTime = Date.now() + 30000
 
+    useEffect(() => {
+    document.body.classList.add('login')
+    return () => {
+      document.body.classList.remove('login')
+    }
+  }, [])
+  
 const renderer = ({ seconds, completed,nationality_id }) => {
   if (completed) {
    return (
@@ -35,7 +39,6 @@ const resetPassword = async () => {
     try {
         setLoading(true)
         const response = await axios.put(api2,{nationality_id,password,code,phoneNumber})
-        console.log("response",response)
         Promise.all([loadingTimer(1500)]).then(()=>{
         dispatch(handleSetAuthedUser(response.data.info, response.headers.authorization))
         PopupActions.showToast({
@@ -44,15 +47,14 @@ const resetPassword = async () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
           setLoading(false)
       })
         
         
     } catch (error) {
-       
-        console.log("error",error)
         Promise.all([loadingTimer(1500)]).then(()=>{
         PopupActions.showToast({
             text: `Code Is Wrong Try Again!`,
@@ -60,7 +62,8 @@ const resetPassword = async () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
           setLoading(false)
       })
@@ -78,7 +81,8 @@ const resendCode = async () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
           setResend((resend) => resend + 1)
     } catch (error) {
@@ -88,16 +92,18 @@ const resendCode = async () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
     }
 }
- if (isUserLogedin === true) {
-    return <Navigate to="/" />
-  }
+
   if(loading === true){
-      return <Loading type={'spin'} color={'red'} styleClass="sign-spin"/>
+      return <Loading type={'bubbles'} color={'red'} styleClass="sign-spin"/>
   }
+  const memoCode = useMemo(()=>{
+    return Date.now() + 5000
+  },[resend])
 return(
 <Fragment>
     <div className="rangerPage d-flex justify-content-center align-items-center container">
@@ -108,12 +114,12 @@ return(
             <b className="text-danger"> {phoneNumber}</b>
         </span>
         <div className="d-flex flex-row mt-5">
-            <input type="number" className="form-control lf--input no-arrow" autoFocus="" maxLength={6} onChange={(e)=>setCode(e.target.value)}/>
+            <input type="text" className="form-control lf--input no-arrow" autoFocus="" maxLength={6} onChange={(e)=> isNaN(e.target.value) ? null : setCode(e.target.value)} value={code}/>
         </div>
         <div className="d-flex flex-row mt-5 content">
            <button id='main-submit' onClick={()=>resetPassword()}>Verify</button>
         </div>
-        <Countdown date={currentTime} renderer={renderer} key={resend}/>
+        <Countdown date={memoCode} renderer={renderer} key={resend}/>
         </div>
     </div>
 </Fragment>

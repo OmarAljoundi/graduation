@@ -47,14 +47,16 @@ const RangerForm = () => {
               text: `Account Has Been Create For ${first + ' ' + last}`,
               type: DialogType.SUCCESS,
               position: ToastPosition.BOTTOM_RIGHT,
-              timeoutDuration: 5000
+              timeoutDuration: 5000,
+              showCloseButton:false
             })
           } else {
             PopupActions.showToast({
               text: `Something Went Wrong, Try Again!`,
               type: DialogType.DANGER,
               position: ToastPosition.BOTTOM_RIGHT,
-              timeoutDuration: 5000
+              timeoutDuration: 5000,
+              showCloseButton:false
             })
           }
           setLoading(false)
@@ -66,7 +68,8 @@ const RangerForm = () => {
           text: `Something Went Wrong, Try Again! ${err}`,
           type: DialogType.WARNING,
           position: ToastPosition.BOTTOM_RIGHT,
-          timeoutDuration: 5000
+          timeoutDuration: 5000,
+          showCloseButton:false
         })
         setLoading(false)
       })

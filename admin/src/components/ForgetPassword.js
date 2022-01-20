@@ -16,6 +16,7 @@ const ForgetPassword = () => {
   const isUserLogedin = useSelector(({ authedUser }) => (authedUser ? authedUser.signin : false))
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+
   
   useEffect(() => {
     document.body.classList.add('login')
@@ -23,6 +24,7 @@ const ForgetPassword = () => {
       document.body.classList.remove('login')
     }
   }, [])
+  
 
 
   const handlePasswordUpdate = async (e) => {
@@ -36,7 +38,8 @@ const ForgetPassword = () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
     }
     try {
@@ -48,7 +51,6 @@ const ForgetPassword = () => {
     
       
     } catch (error) {
-      console.log(error)
        Promise.all([loadingTimer(1500)]).then(() => {
         if(!error?.response){
           PopupActions.showToast({
@@ -57,17 +59,19 @@ const ForgetPassword = () => {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
       }
       else {
          PopupActions.showToast({
-            text: `Login Faild!`,
-            type: DialogType.ERROR,
+            text: `Account Does Not Exist!`,
+            type: DialogType.DANGER,
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
       }
         setLoading(false)
@@ -76,13 +80,13 @@ const ForgetPassword = () => {
   }
 
  if (isUserLogedin === true) {
+   PopupActions.hideModal()
     return <Navigate to="/" />
   }
-
   return (
     <div className="site-wrapper">
-      {loading === true && (<Loading type={'spin'} color={'red'} styleClass="sign-spin"/>)}
-      <form className="login-form" onSubmit={(e) => handlePasswordUpdate(e)}>
+      {loading === true && (<Loading type={'bubbles'} color={'red'} styleClass="sign-spin"/>)}
+      <form className={loading == true ? 'login-form hideLogin' : 'login-form'} onSubmit={(e) => handlePasswordUpdate(e)}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <img src={logo} alt="Logo" />
         </div>
@@ -101,12 +105,12 @@ const ForgetPassword = () => {
           <input
             id="username"
             className="lf--input no-arrow"
-            name="phone"
-            type="number"
+            name="id"
+            type="text"
             placeholder="Nationality ID"
-            maxLength="10"
+            maxLength={10}
             value={nationality_id}
-            onChange={(e) => setNationality_id(e.target.value)}
+            onChange={(e) => isNaN(e.target.value) ? null : setNationality_id(e.target.value)}
             required
           />
         </div>
@@ -127,7 +131,6 @@ const ForgetPassword = () => {
             name="passowrd"
             type="password"
             placeholder="Password"
-            maxLength="11"
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
             required

@@ -34,7 +34,6 @@ export const viewUser = (userId, rangerID, token, api) => {
       url: `${api}/${userId ? userId : rangerID}`,
       headers: { authorization: 'Bearer ' + token }
     }).then((response) => {
-      console.log(response.data)
       userInfo = response.data
       resolve()
     })

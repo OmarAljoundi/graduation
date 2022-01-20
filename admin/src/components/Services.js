@@ -6,7 +6,7 @@ import '../style/users.scss'
 import '../style/SearchBar.css'
 import { SearchIcon, ArrowLeftIcon } from '@primer/octicons-react'
 import Select from 'react-select'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import ServiceType from './ServiceType'
 
 const api = 'http://localhost:5000/services'
@@ -49,7 +49,6 @@ const Service = () => {
       console.error(error)
     }
     return () => {
-      console.log('component will unmount')
     }
   }, [])
 
@@ -86,6 +85,9 @@ const Service = () => {
       default:
         return Object.values(tempServices)
     }
+  }
+   if(!authedUser.signin){
+    return <Navigate to='/'/>
   }
   return (
     <Fragment>

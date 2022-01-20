@@ -33,7 +33,6 @@ class SearchBar extends Component {
 
   render() {
     const { query } = this.state
-    console.log(query)
     return (
       <Fragment>
         <div className="centerbox">

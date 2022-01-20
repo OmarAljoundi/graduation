@@ -8,7 +8,7 @@ import { SearchIcon, ArrowLeftIcon } from '@primer/octicons-react'
 import { handleSetComplaints, handleUpdateComplaints } from '../actions/complaints'
 import Select from 'react-select'
 import dateFormat from 'dateformat'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import axios from 'axios'
 import { viewUser } from './Helper/UpdateStatus'
 import { showImage, showMap } from './Helper/ShowModels'
@@ -44,7 +44,6 @@ const Complaints = () => {
         url: api,
         headers: { authorization: 'Bearer ' + token }
       }).then((response) => {
-        console.log(response)
         dispatch(handleSetComplaints(response.data.sort((a, b) => a.id - b.id)))
       })
     } catch (err) {
@@ -78,19 +77,25 @@ const Complaints = () => {
             text: `Complaint Has Been ${complaintStatus}!`,
             type: DialogType.SUCCESS,
             position: ToastPosition.BOTTOM_RIGHT,
-            timeoutDuration: 5000
+            timeoutDuration: 5000,
+            showCloseButton:false
           })
         } else {
           PopupActions.showToast({
             text: `Complaint Couldnt Be ${complaintStatus}!`,
             type: DialogType.DANGER,
             position: ToastPosition.BOTTOM_RIGHT,
-            timeoutDuration: 5000
+            timeoutDuration: 5000,
+            showCloseButton:false
           })
         }
       }
       result()
     })
+  }
+
+  if(!authedUser.signin){
+    return <Navigate to='/'/>
   }
 
   return (

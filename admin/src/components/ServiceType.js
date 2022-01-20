@@ -41,14 +41,16 @@ const ServiceType = (props) => {
             text: `Service Has Been ${serviceStatus}!`,
             type: DialogType.SUCCESS,
             position: ToastPosition.BOTTOM_RIGHT,
-            timeoutDuration: 5000
+            timeoutDuration: 5000,
+            showCloseButton:false
           })
         } else {
           PopupActions.showToast({
             text: `Service Couldnt Be ${serviceStatus}!`,
             type: DialogType.DANGER,
             position: ToastPosition.BOTTOM_RIGHT,
-            timeoutDuration: 5000
+            timeoutDuration: 5000,
+            showCloseButton:false
           })
         }
       }

@@ -17,10 +17,8 @@ function Login() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   useEffect(() => {
-    console.log('component mounted!')
     document.body.classList.add('login')
     return () => {
-      console.log('component will unmount')
       document.body.classList.remove('login')
     }
   }, [])
@@ -40,7 +38,8 @@ function Login() {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
         }
          else if (response.data.info.firsttime === false) {
@@ -51,7 +50,8 @@ function Login() {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
         } else {
           PopupActions.showToast({
@@ -60,7 +60,8 @@ function Login() {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
           return navigate('/createpassword', { state: response.data.info })
         }
@@ -78,7 +79,8 @@ function Login() {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
       }
       else {
@@ -88,7 +90,8 @@ function Login() {
             position: ToastPosition.TOP_CENTER,
             timeoutDuration: 3000,
             showProgress:true,
-            progressColor:'white'
+            progressColor:'white',
+            showCloseButton:false
           })
       }
         setLoading(false)
@@ -108,7 +111,7 @@ function Login() {
   }
   return (
     <div className="site-wrapper">
-      {loading === true && (<Loading type={'spin'} color={'red'} styleClass="sign-spin"/>)}
+      {loading === true && (<Loading type={'bubbles'} color={'red'} styleClass="sign-spin"/>)}
       <form className={loading == true ? 'login-form hideLogin' : 'login-form'} onSubmit={(e) => handleSubmit(e)}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <img src={logo} alt="Logo" />
@@ -129,11 +132,11 @@ function Login() {
             id="username"
             className="lf--input no-arrow"
             name="phone"
-            type="number"
+            type="text"
             placeholder="Nationality ID"
-            maxLength="11"
+            maxLength={10}
             value={nationality_id}
-            onChange={(e) => handlePhoneChange(e)}
+            onChange={(e) => isNaN(e.target.value) ? null : handlePhoneChange(e)}
             required
           />
         </div>

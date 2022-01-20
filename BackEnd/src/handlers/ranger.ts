@@ -150,16 +150,15 @@ const resendCode = async (_req:Request,res:Response)=>{
     if(object){
         await clientServer.verify.services(service_id!).verifications
         .create({to:`+962${object.phone_number}`,channel:'sms'}).then((r)=>{
-            return res.json({phone_number:object.phone_number})
+            if(r)
+                return res.json({phone_number:object.phone_number})
+            else 
+                return res.sendStatus(404)
         })
-        .catch(err=>{
-            console.log(err)
-            res.sendStatus(404)
-        }
-            )
+
     }
     else{
-        return res.sendStatus(204)
+        return res.sendStatus(404)
     }
 }
 
@@ -187,6 +186,7 @@ const resetRangerPassword = async(_req:Request,res:Response) =>{
                             message:"Login Successfully"
                         })
                 }
+                else return res.sendStatus(404)
             })
             .catch(err=>{return res.sendStatus(404)})
 }

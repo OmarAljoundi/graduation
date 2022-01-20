@@ -5,7 +5,7 @@ import { Loading, loadingTimer } from './Helper/Loading'
 
 import { handleDeleteRanger, handleSetRangers } from '../actions/rangers'
 import { ArrowLeftIcon, SearchIcon,CheckCircleFillIcon } from '@primer/octicons-react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import Select from 'react-select'
 import '../style/users.scss'
 import '../style/SearchBar.css'
@@ -93,6 +93,15 @@ const Rangers = () => {
       }
     })
   }
+
+  if(!authedUser.signin){
+    return <Navigate to='/'/>
+  }
+
+  if(authedUser.signin && !authedUser.role.includes("Create")){
+    return <Navigate to='/'/>
+  }
+  console.log(rangers.role)
 
   const filterRangers = () => {
     let tempRangers
