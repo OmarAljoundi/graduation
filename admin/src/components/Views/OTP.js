@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import Countdown from "react-countdown";
 import { DialogType, PopupActions, ToastPosition } from 'react-custom-popup';
 import { useDispatch } from 'react-redux';
@@ -19,7 +19,7 @@ const OTP = ({phoneNumber,nationality_id,password}) => {
       document.body.classList.remove('login')
     }
   }, [])
-  
+
 const renderer = ({ seconds, completed,nationality_id }) => {
   if (completed) {
    return (
@@ -101,9 +101,6 @@ const resendCode = async () => {
   if(loading === true){
       return <Loading type={'bubbles'} color={'red'} styleClass="sign-spin"/>
   }
-  const memoCode = useMemo(()=>{
-    return Date.now() + 5000
-  },[resend])
 return(
 <Fragment>
     <div className="rangerPage d-flex justify-content-center align-items-center container">
@@ -119,7 +116,7 @@ return(
         <div className="d-flex flex-row mt-5 content">
            <button id='main-submit' onClick={()=>resetPassword()}>Verify</button>
         </div>
-        <Countdown date={memoCode} renderer={renderer} key={resend}/>
+        <Countdown date={Date.now() + 30000} renderer={renderer} key={resend}/>
         </div>
     </div>
 </Fragment>
